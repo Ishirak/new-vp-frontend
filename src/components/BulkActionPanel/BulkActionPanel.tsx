@@ -5,6 +5,9 @@ import * as classNames from 'classnames';
 
 import './BulkActionPanel.less';
 
+import Title from './Title';
+import Options from './options/Options';
+
 interface BulkActionPanelProps extends React.Props<JSX.Element> {
   enableActions: boolean;
   onBulkAction: (action: string) => void;
@@ -37,14 +40,24 @@ export default class BulkActionPanel extends React.Component<BulkActionPanelProp
       'hide': selectedCommits.length === 0
     });
 
+    const options: BulkActionPanelOption[] = [
+      {
+        title: 'Bulk Actions',
+        value: '-1',
+        isSelected: true
+      },
+      {
+        title: 'Undo',
+        value: 'undo',
+        isSelected: false
+      }
+    ];
+
     return (
       <div className='BulkActionPanel'>
         <div className='alignleft actions bulkactions'>
-          <label htmlFor='BulkActionPanel-selector-top' className='screen-reader-text'>Select bulk action</label>
-          <select ref='action' name='action' id='BulkActionPanel-selector-top'>
-            <option value='-1'>Bulk Actions</option>
-            <option value='undo'>Undo</option>
-          </select>
+          <Title />
+          <Options options={options} />
           <input
             type='submit'
             id='BulkActionPanel-doaction'
