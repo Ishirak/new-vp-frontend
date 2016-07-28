@@ -1,12 +1,13 @@
 /// <reference path='../Commits/Commits.d.ts' />
 
 import * as React from 'react';
-import * as classNames from 'classnames';
 
 import './BulkActionPanel.less';
 
 import Title from './Title';
 import Options from './options/Options';
+import Submit from './Submit';
+import ClearSelection from './ClearSelection';
 
 interface BulkActionPanelProps extends React.Props<JSX.Element> {
   enableActions: boolean;
@@ -15,32 +16,14 @@ interface BulkActionPanelProps extends React.Props<JSX.Element> {
   selectedCommits: Commit[];
 }
 
-export default class BulkActionPanel extends React.Component<BulkActionPanelProps, {}> {
+interface BulkActionPanelState {
+  options: BulkActionPanelOption[];
+}
 
-  onBulkAction = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const value = (this.refs['action'] as HTMLSelectElement).value;
-    if (value === '-1') {
-      return;
-    }
+export default class BulkActionPanel extends React.Component<BulkActionPanelProps, BulkActionPanelState> {
 
-    this.props.onBulkAction(value);
-  }
-
-  onClearSelection = (e: React.MouseEvent) => {
-    e.preventDefault();
-    this.props.onClearSelection();
-  }
-
-  render() {
-    const { selectedCommits, enableActions } = this.props;
-
-    const noteClassName = classNames({
-      'BulkActionPanel-note': true,
-      'hide': selectedCommits.length === 0
-    });
-
-    const options: BulkActionPanelOption[] = [
+  state = {
+    options: [
       {
         title: 'Bulk Actions',
         value: '-1',
@@ -51,26 +34,61 @@ export default class BulkActionPanel extends React.Component<BulkActionPanelProp
         value: 'undo',
         isSelected: false
       }
-    ];
+    ]
+  }
+
+  onSelectedValueChange = (newValue: string) => {
+    const newOptions = this.state.options.map(option => {
+      return {
+        title: option.title,
+        value: option.value,
+        isSelected: option.value === newValue
+      }
+    });
+
+    this.setState({
+      options: newOptions
+    });
+  }
+
+  onSubmitClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    const selectedOption = this.state.options.find(option => option.isSelected);
+
+    if (selectedOption.value === '-1') {
+      return;
+    }
+
+    this.props.onBulkAction(selectedOption.value);
+  }
+
+  onClearSelectionClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    this.props.onClearSelection();
+  }
+
+  render() {
+    const { selectedCommits, enableActions } = this.props;
+    const { options } = this.state;
 
     return (
       <div className='BulkActionPanel'>
         <div className='alignleft actions bulkactions'>
           <Title />
-          <Options options={options} />
-          <input
-            type='submit'
-            id='BulkActionPanel-doaction'
-            className='button action'
-            value='Apply'
-            onClick={this.onBulkAction}
-            disabled={!enableActions || selectedCommits.length === 0}
+          <Options
+            options={options}
+            onChange={this.onSelectedValueChange}
           />
-          <div className={noteClassName}>
-            ({selectedCommits.length} {selectedCommits.length === 1 ? 'change' : 'changes'} selected;{' '}
-            <a className='BulkActionPanel-clear' href='#' onClick={this.onClearSelection}>clear selection</a>
-            )
-          </div>
+          <Submit
+            onClick={this.onSubmitClick}
+            isDisabled={!enableActions || selectedCommits.length === 0}
+          />
+          <ClearSelection
+            changes={selectedCommits.length}
+            onClick={this.onClearSelectionClick}
+          />
         </div>
       </div>
     );
