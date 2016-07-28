@@ -4,24 +4,32 @@ import Option from './Option';
 
 interface OptionsProps {
   options: BulkActionPanelOption[];
-  onChange: (newValue: string) => void;
+  onChange(newValue: string): void;
 }
 
-const Options: React.StatelessComponent<OptionsProps> = ({ options, onChange }) => (
-  <select
-    name='action'
-    id='BulkActionPanel-selector-top'
-  >
-    {options.map(option => {
-      return (
-        <Option
-          option={option}
-          onClick={() => onChange(option.value)}
-          key={option.value}
-        />
-      );
-    })}
-  </select>
-);
+export default class Options extends React.Component<OptionsProps, {}> {
 
-export default Options;
+  onChange = (e) => {
+    this.props.onChange(e.target.value);
+  }
+
+  render() {
+    return (
+      <select
+        name='action'
+        id='BulkActionPanel-selector-top'
+        onChange={this.onChange}
+      >
+        {this.props.options.map(option => {
+          return (
+            <Option
+              option={option}
+              key={option.value}
+            />
+          );
+        })}
+      </select>
+    );
+  }
+
+}

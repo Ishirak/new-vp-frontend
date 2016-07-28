@@ -2,15 +2,12 @@ import * as React from 'react';
 
 interface OptionProps {
   option: BulkActionPanelOption;
-  onClick: () => void;
+  onClick(): void;
 }
 
-const Option: React.StatelessComponent<OptionProps> = ({ option, onClick }) => (
-  <option
-    value={option.value}
-    onClick={onClick}
-  >
-    {option.title}
+const Option = ( props: OptionProps ) => (
+  <option value={props.option.value}>
+    {props.option.title}
   </option>
 );
 

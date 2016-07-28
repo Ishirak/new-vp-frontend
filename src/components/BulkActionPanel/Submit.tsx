@@ -2,7 +2,7 @@ import * as React from 'react';
 
 interface SubmitProps {
   isDisabled: boolean;
-  onClick: () => void
+  onClick(e: React.MouseEvent): void;
 }
 
 const Submit: React.StatelessComponent<SubmitProps> = ({ isDisabled, onClick }) => (

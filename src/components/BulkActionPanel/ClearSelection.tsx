@@ -3,7 +3,7 @@ import * as classNames from 'classnames';
 
 interface ClearSelectionProps {
   changes: number;
-  onClick: () => void
+  onClick(e: React.MouseEvent): void;
 }
 
 const ClearSelection: React.StatelessComponent<ClearSelectionProps> = ({ changes, onClick }) => {
