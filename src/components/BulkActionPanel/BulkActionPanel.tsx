@@ -12,8 +12,8 @@ import ClearSelection from './ClearSelection';
 
 interface BulkActionPanelProps extends React.Props<JSX.Element> {
   enableActions: boolean;
-  onBulkAction: (action: string) => void;
-  onClearSelection: () => void;
+  onBulkAction(action: string): void;
+  onClearSelection(): void;
   selectedCommits: Commit[];
 }
 

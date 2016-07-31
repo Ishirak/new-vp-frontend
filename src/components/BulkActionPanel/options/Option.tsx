@@ -2,7 +2,6 @@ import * as React from 'react';
 
 interface OptionProps {
   option: BulkActionPanelOption;
-  onClick(): void;
 }
 
 const Option = ( props: OptionProps ) => (
